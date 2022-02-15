@@ -98,7 +98,7 @@ module.exports = {
           const msgFilter = (msg) => {
             return msg.author.id === message.author.id
           }
-          let welcomeMsg = await message.channel.awaitMessages({ msgFilter, max: 1, time: 30000, errors: ["time"] });
+          let welcomeMsg = await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] });
           if (!welcomeMsg.first())
             return client.sendTime(
               message.channel,
@@ -151,7 +151,7 @@ module.exports = {
             return user.id === message.author.id && ["🔧", "❌"].includes(reaction.emoji.name);
         };
 
-        let emoji = await EditWelcomePost.awaitReactions({ filter, max: 1, time: 30000, errors: ['time'] })
+        let emoji = await EditWelcomePost.awaitReactions({ filter: filter, max: 1, time: 30000, errors: ['time'] })
         .catch(() => {
           EditWelcomePost.reactions.removeAll();
           client.sendTime(
@@ -178,7 +178,7 @@ module.exports = {
             const msgFilter = (msg) => {
                 return msg.author.id === message.author.id
             }
-            let welcomeMsg = await message.channel.awaitMessages({ msgFilter, max: 1, time: 30000, errors: ["time"] });
+            let welcomeMsg = await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] });
             if (!welcomeMsg.first())
               return client.sendTime(
                 message.channel,
