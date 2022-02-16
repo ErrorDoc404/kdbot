@@ -99,7 +99,7 @@ What would you like to edit?
       const roleFilter = (msg) => {
         return msg.author.id === message.author.id
       }
-      await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] })
+      await message.channel.awaitMessages({ filter: roleFilter, max: 1, time: 30000, errors: ["time"] })
         .then(async role => {
           if (!role.first())
             return client.sendTime(
@@ -138,7 +138,7 @@ What would you like to edit?
       const roleFilter = (msg) => {
         return msg.author.id === message.author.id
       }
-      await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] })
+      await message.channel.awaitMessages({ filter: roleFilter, max: 1, time: 30000, errors: ["time"] })
       .then(async role => {
         if (!role.first())
           return client.sendTime(message.channel, "You took too long to respond.");

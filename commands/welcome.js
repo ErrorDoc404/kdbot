@@ -68,7 +68,7 @@ module.exports = {
             const msgFilter = (msg) => {
                 return msg.author.id === message.author.id
             }
-            await message.channel.awaitMessages({ msgFilter, max: 1, time: 30000, errors: ["time"] })
+            await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] })
             .then(async welcomeMsg => {
               if (!welcomeMsg.first())
                 return client.sendTime(
