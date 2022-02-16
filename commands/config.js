@@ -66,28 +66,31 @@ What would you like to edit?
       const prefixFilter = (msg) => {
           return msg.author.id === message.author.id
       }
-      let prefix = await message.channel.awaitMessages({ prefixFilter, max: 1, time: 30000, errors: ["time"] });
-      if (!prefix.first())
-        return client.sendTime(
-          message.channel,
-          "You took too long to respond."
-        );
-      prefix = prefix.first();
-      prefix = prefix.content;
+      await message.channel.awaitMessages({ filter: prefixFilter, max: 1, time: 30000, errors: ["time"] })
+        .then(async prefixMsg => {
+          if(!prefixMsg.first()){
+            return client.sendTime(message.channel, "You took too long to respond");
+          }
 
-      try{
-        const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
-          prefix: prefix,
-          modRole: GuildDB.modRole,
-        },{new: true});
-      }catch (err){
-        console.log(err);
-      }
+          prefixMsg = prefixMsg.first();
+          prefixMsg = prefixMsg.content;
 
-      client.sendTime(
-        message.channel,
-        `Successfully saved guild prefix as \`${prefix}\``
-      );
+          try{
+            const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
+              prefix: prefixMsg,
+              modRole: GuildDB.modRole,
+            },{new: true});
+          }catch (err){
+            console.log(err);
+          }
+          client.sendTime(
+            message.channel,
+            `Successfully saved guild prefix as \`${prefixMsg}\``
+          );
+        })
+        .catch(collected => {
+          return client.sendTime(message.channel, "You took too long to respond");
+        });
     } else if(em._emoji.name === "2️⃣") {
       await client.sendTime(
         message.channel,
