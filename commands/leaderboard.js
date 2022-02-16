@@ -26,13 +26,13 @@ module.exports = {
       .setColor(client.config.EmbedColor)
 
     const leaderboards = Level.find({guildId: message.guild.id}).sort({totalXp: -1});
-
     var i = 1;
 
     (await leaderboards).forEach(lb => {
         if(i<=9){
             var member = message.guild.members.cache.get(lb.userID);
-            member = member.user;
+            if(!member) {return true;}
+            else member = member.user;
             Embed.addField(`${i}. ${member.username}`, `┕\`Xp: ${lb.totalXp}\``, true);
             i++;
         }
