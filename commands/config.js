@@ -99,33 +99,38 @@ What would you like to edit?
       const roleFilter = (msg) => {
         return msg.author.id === message.author.id
       }
-      let role = await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] });
-      if (!role.first())
-        return client.sendTime(
-          message.channel,
-          "You took too long to respond."
-        );
-      role = role.first();
-      if (!role.mentions.roles.first())
-        return client.sendTime(
-          message.channel,
-          "Please mention the role that you want for Moderators's only."
-        );
-      role = role.mentions.roles.first();
+      await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] })
+        .then(async role => {
+          if (!role.first())
+            return client.sendTime(
+              message.channel,
+              "You took too long to respond."
+            );
+          role = role.first();
+          if (!role.mentions.roles.first())
+            return client.sendTime(
+              message.channel,
+              "Please mention the role that you want for Moderators's only."
+            );
+          role = role.mentions.roles.first();
 
-      try{
-        const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
-          prefix: GuildDB.prefix,
-          modRole: role.id,
-        },{new: true});
-      }catch (err){
-        console.log(err);
-      }
+          try{
+            const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
+              prefix: GuildDB.prefix,
+              modRole: role.id,
+            },{new: true});
+          }catch (err){
+            console.log(err);
+          }
 
-      client.sendTime(
-        message.channel,
-        "Successfully saved Moderators role as <@&" + role.id + ">"
-      );
+          client.sendTime(
+            message.channel,
+            "Successfully saved Moderators role as <@&" + role.id + ">"
+          );
+        })
+        .catch(collected => {
+          return client.sendTime(message.channel, "You took too long to respond");
+        });
     } else if(em._emoji.name === "3️⃣"){
       await client.sendTime(
         message.channel, "Please mention the role you want `Default Member's Join` to have."
@@ -133,31 +138,37 @@ What would you like to edit?
       const roleFilter = (msg) => {
         return msg.author.id === message.author.id
       }
-      let role = await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] });
-      if (!role.first())
-        return client.sendTime(message.channel, "You took too long to respond.");
-      role = role.first();
-      if (!role.mentions.roles.first())
-        return client.sendTime(
-          message.channel, "Please mention the role that you want for Default Member's Join only."
-        );
-      role = role.mentions.roles.first();
+      await message.channel.awaitMessages({ roleFilter, max: 1, time: 30000, errors: ["time"] })
+      .then(async role => {
+        if (!role.first())
+          return client.sendTime(message.channel, "You took too long to respond.");
+        role = role.first();
+        if (!role.mentions.roles.first())
+          return client.sendTime(
+            message.channel, "Please mention the role that you want for Default Member's Join only."
+          );
+        role = role.mentions.roles.first();
 
-      try{
-        const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
-          prefix: GuildDB.prefix,
-          defaultRole: role.id,
-        },{new: true});
-      }catch (err){
-        console.log(err);
+        try{
+          const findGuildConfig = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
+            prefix: GuildDB.prefix,
+            defaultRole: role.id,
+          },{new: true});
+        }catch (err){
+          console.log(err);
+          client.sendTime(
+            message.channel, "❌ | Something went Wrong"
+          );
+        }
+
         client.sendTime(
-          message.channel, "❌ | Something went Wrong"
+          message.channel, "Successfully saved Default Member's Join role as <@&" + role.id + ">"
         );
-      }
-
-      client.sendTime(
-        message.channel, "Successfully saved Default Member's Join role as <@&" + role.id + ">"
-      );
+      })
+      .catch(collected => {
+        return client.sendTime(message.channel, "You took too long to respond");
+      });
+      
     }
   },
 };

@@ -68,28 +68,33 @@ module.exports = {
             const msgFilter = (msg) => {
                 return msg.author.id === message.author.id
             }
-            let welcomeMsg = await message.channel.awaitMessages({ msgFilter, max: 1, time: 30000, errors: ["time"] });
-            if (!welcomeMsg.first())
-              return client.sendTime(
+            await message.channel.awaitMessages({ msgFilter, max: 1, time: 30000, errors: ["time"] })
+            .then(async welcomeMsg => {
+              if (!welcomeMsg.first())
+                return client.sendTime(
+                  message.channel,
+                  "You took too long to respond."
+                );
+              welcomeMsg = welcomeMsg.first();
+              welcomeMsg = welcomeMsg.content;
+              welcomeMsg = welcomeMsg.replace(/[^0-9]/g, "");
+
+              try{
+                const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
+                  welcomeChannel: welcomeMsg,
+                },{new: true});
+              }catch (err){
+                console.log(err);
+              }
+
+              client.sendTime(
                 message.channel,
-                "You took too long to respond."
+                `Successfully saved welcome channel as <#${welcomeMsg}>`
               );
-            welcomeMsg = welcomeMsg.first();
-            welcomeMsg = welcomeMsg.content;
-            welcomeMsg = welcomeMsg.replace(/[^0-9]/g, "");
-
-            try{
-              const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
-                welcomeChannel: welcomeMsg,
-              },{new: true});
-            }catch (err){
-              console.log(err);
-            }
-
-            client.sendTime(
-              message.channel,
-              `Successfully saved welcome channel as <#${welcomeMsg}>`
-            );
+            })
+            .catch(collected => {
+              return client.sendTime(message.channel, "You took too long to respond");
+            });
         } else if(em._emoji.name === "💌"){
           await client.sendTime(
             message.channel,
@@ -98,27 +103,32 @@ module.exports = {
           const msgFilter = (msg) => {
             return msg.author.id === message.author.id
           }
-          let welcomeMsg = await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] });
-          if (!welcomeMsg.first())
-            return client.sendTime(
+          await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] })
+          .then(async welcomeMsg => {
+            if (!welcomeMsg.first())
+              return client.sendTime(
+                message.channel,
+                "You took too long to respond."
+              );
+            welcomeMsg = welcomeMsg.first();
+            welcomeMsg = welcomeMsg.content;
+
+            try{
+              const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
+                welcomeChannelMessage: welcomeMsg,
+              },{new: true});
+            }catch (err){
+              console.log(err);
+            }
+
+            client.sendTime(
               message.channel,
-              "You took too long to respond."
+              `Successfully saved your welcome message`
             );
-          welcomeMsg = welcomeMsg.first();
-          welcomeMsg = welcomeMsg.content;
-
-          try{
-            const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
-              welcomeChannelMessage: welcomeMsg,
-            },{new: true});
-          }catch (err){
-            console.log(err);
-          }
-
-          client.sendTime(
-            message.channel,
-            `Successfully saved your welcome message`
-          );
+          })
+          .catch(collected => {
+            return client.sendTime(message.channel, "You took too long to respond");
+          });
         } else if(em._emoji.name === "❌") {
           try{
             const SetModule = await Module.findOneAndUpdate({guildId: message.guild.id },{
@@ -178,44 +188,49 @@ module.exports = {
             const msgFilter = (msg) => {
                 return msg.author.id === message.author.id
             }
-            let welcomeMsg = await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] });
-            if (!welcomeMsg.first())
-              return client.sendTime(
-                message.channel,
-                "You took too long to respond."
-              );
-            welcomeMsg = welcomeMsg.first();
-            welcomeMsg = welcomeMsg.content;
-            welcomeMsg = welcomeMsg.replace(/[^0-9]/g, "");
+            await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] })
+            .then(async welcomeMsg => {
+              if (!welcomeMsg.first())
+                return client.sendTime(
+                  message.channel,
+                  "You took too long to respond."
+                );
+              welcomeMsg = welcomeMsg.first();
+              welcomeMsg = welcomeMsg.content;
+              welcomeMsg = welcomeMsg.replace(/[^0-9]/g, "");
 
-            try{
-              const SetModule = await Module.findOneAndUpdate({guildId: message.guild.id },{
-                guildMemberAdd: true,
-              },{new: true});
-            }catch (err){
-              console.log(err);
-            }
-
-            try{
-              const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
-                welcomeChannel: welcomeMsg,
-              },{new: true});
-              if(SetModeration){
-                console.log('Module found');
-              } else {
-                const newModeration = await Moderation.create({
-                  guildId: message.guild.id,
-                  welcomeChannel: welcomeMsg,
-                });
+              try{
+                const SetModule = await Module.findOneAndUpdate({guildId: message.guild.id },{
+                  guildMemberAdd: true,
+                },{new: true});
+              }catch (err){
+                console.log(err);
               }
-            }catch (err){
-              console.log(err);
-            }
 
-            client.sendTime(
-              message.channel,
-              `Successfully saved welcome channel as <#${welcomeMsg}>`
-            );
+              try{
+                const SetModeration = await Moderation.findOneAndUpdate({guildId: message.guild.id },{
+                  welcomeChannel: welcomeMsg,
+                },{new: true});
+                if(SetModeration){
+                  console.log('Module found');
+                } else {
+                  const newModeration = await Moderation.create({
+                    guildId: message.guild.id,
+                    welcomeChannel: welcomeMsg,
+                  });
+                }
+              }catch (err){
+                console.log(err);
+              }
+
+              client.sendTime(
+                message.channel,
+                `Successfully saved welcome channel as <#${welcomeMsg}>`
+              );
+            })
+            .catch(collected => {
+              return client.sendTime(message.channel, "You took too long to respond");
+            });            
         }
       }
     }catch (err){
