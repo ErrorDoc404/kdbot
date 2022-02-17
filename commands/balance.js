@@ -30,7 +30,7 @@ module.exports = {
                 guildId: message.guild.id,
                 userId: message.author.id,
               });
-
+              // when account not found on economy database
               if(newEconomy){
                 const msg = new MessageEmbed()
                     .setColor("#FFFFFF")
