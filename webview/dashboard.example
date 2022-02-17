@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>KD - Guilds</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="/logo.png" rel="icon" type="image/gif">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+  <link href="vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="vendor/line-awesome/css/line-awesome.min.css" rel="stylesheet">
+  <link href="vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="css/style.css" rel="stylesheet">
+  
+</head>
+
+<body>
+  <div id="app-server">
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center ">
+      <div class="container d-flex align-items-center">
+
+        <div class="logo mr-auto">
+          <h1 class="text-light"><a href="index.html">Karta Dharta</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        </div>
+
+        <nav class="nav-menu d-none d-lg-block">
+          <ul>
+            <li class="active"><a href="#hero">Dashboard</a></li>
+            <li><a href="/info">Info</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/servers">Server</a></li>
+            <li><a href="/command">Command</a></li>
+            <li class="btn active"><a href="/logout">Logout</a></li>
+
+          </ul>
+        </nav><!-- .nav-menu -->
+
+      </div>
+    </header><!-- End Header -->
+
+    <main id="main">
+
+      <!-- ======= Breadcrumbs ======= -->
+      <section class="breadcrumbs">
+        <div class="container">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>{{ user.discordTag }}</h2>
+            <ol>
+              <li><a href="/dashboard">Dashboard</a></li>
+              <li>Guilds</li>
+            </ol>
+          </div>
+
+        </div>
+      </section><!-- End Breadcrumbs -->
+
+      <section class="inner-page portfolio-details">
+        <div class="container">
+          <div class="card-body all-icons">
+            <div class="row">
+              <div id="servers" class="flex"></div>
+              <div class="col-lg-4 col-md-4 col-sm-6" v-for="guild in guilds" v-if="guild.hasPerms">
+                <div class="card p-4 mt-3">
+                  <div class="first">
+                    <h6 class="heading"><p class="text-primary">{{guild.name}}</p></h6>
+                  </div>
+                  <div class="second d-flex flex-row mt-2">
+                    <div class="image mr-3" v-if="guild.icon"> <img v-bind:src="'https://cdn.discordapp.com/icons/'+guild.id+'/'+guild.icon" class="rounded-circle" width="60" /> </div>
+                    <div class="image mr-3" v-else> <img src="https://cdn.logojoy.com/wp-content/uploads/20210422095037/discord-mascot.png" class="rounded-circle" width="60" /> </div>
+                    <div class="">
+                      <div class="d-flex flex-row mb-1"> Watching
+                        Guild
+                      </div>
+                      <div v-for="data in cache">
+                        <div v-if="guild.inGuild && data.id === guild.id"> <button class="btn btn-outline-primary btn-sm px-2">{{data.channels.length}} Channels</button> <button class="btn btn-outline-primary btn-sm px-2">{{data.members.length}} Members</button> </div>
+                      </div>
+                      <div v-if="guild.inGuild === false"> <button class="btn btn-outline-primary btn-sm px-2">Not in Guild</button> </div>
+                    </div>
+                  </div>
+                  <hr class="line-color">
+                  <div class="third mt-4" v-if="guild.inGuild">
+                    <a v-bind:href="'/server/'+guild.id">
+                      <button class="btn btn-warning btn-block">
+                        <i class="fa fa-clock-o"></i> Go to Dashboard
+                      </button>
+                    </a>
+                  </div>
+                  <div class="third mt-4" v-else>
+                    <a v-bind:href="'https://discord.com/oauth2/authorize?client_id='+guild.client_id+'&permissions=2205280576&scope=bot%20identify%20guilds%20applications.commands&redirect_url=./api/auth/discord/redirect&response_type=code&guild_id='+guild.id">
+                    <button class="btn btn-primary btn-block">
+                      <i class="fa fa-clock-o"></i> Add Bot
+                    </button>
+                  </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- End #main -->
+  </div>
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="container">
+      <h3>Karta Dharta</h3>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top"><i class="ri-arrow-up-line"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="vendor/php-email-form/validate.js"></script>
+  <script src="vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="vendor/venobox/venobox.min.js"></script>
+  <script src="vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="vendor/aos/aos.js"></script>
+  <script src="https://unpkg.com/vue@2.5.22/dist/vue.min.js"></script>
+  <script src="vue/server.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="js/main.nav.js"></script>
+
+</body>
+
+</html>

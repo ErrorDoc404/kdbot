@@ -20,6 +20,7 @@ class DiscordModerationBot extends Client {
 
         //creating sets
         this.commands = new Collection();
+        this.CommandsRan = 0;
 
         //Creating Web portal
         var https_options = {
@@ -34,7 +35,7 @@ class DiscordModerationBot extends Client {
         this.https = https.createServer(https_options, this.server);
         this.server.use('/', require('../express'));
         this.io = new Server(this.https);
-        require('../express/socket');
+        require('../express/socket')(this.io);
 
         this.LoadEvents();
         this.LoadCommands();
