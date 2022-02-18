@@ -93,9 +93,9 @@ module.exports = {
       components: components(false),
     });
 
-    const filter = (interaction) => interaction.user.id;
+    const filter = (interaction) => interaction.user.id === message.author.id;
     
-    const collector = message.channel.createMessageComponentCollector({filter: filter, componentType: 'SELECT_MENU'})
+    const collector = message.channel.createMessageComponentCollector({filter: filter, componentType: 'SELECT_MENU', time: 10000})
 
     collector.on('collect', (interaction) => {
       const [ directory ] = interaction.values;

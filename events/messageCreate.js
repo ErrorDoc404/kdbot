@@ -81,7 +81,10 @@ module.exports = async (client, message) => {
 
   //Executing the codes when we get the command or aliases
   if (cmd) {
-    if (
+    if(message.channel.permissionsFor(message.member).has([`${cmd.permissions.member}`])){
+
+    }
+    else if (
       (cmd.permissions &&
         cmd.permissions.channel &&
         !message.channel
