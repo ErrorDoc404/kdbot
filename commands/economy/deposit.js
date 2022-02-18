@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const Economy = require("../mongoose/database/schemas/Economy");
+const Economy = require("../../mongoose/database/schemas/Economy");
 const empty = require('is-empty');
 const ms = require("parse-ms");
 
@@ -12,6 +12,7 @@ module.exports = {
       member: [],
     },
     aliases: ["dep"],
+    category: "economy",
     run: async (client, message, args, { GuildDB }) => {
         let member = message.author;
         var amount = args[0];

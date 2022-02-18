@@ -1,6 +1,6 @@
 const { MessageEmbed, MessageReaction } = require("discord.js");
-const Module = require("../mongoose/database/schemas/Module");
-const Moderation = require("../mongoose/database/schemas/Moderation");
+const Module = require("../../mongoose/database/schemas/Module");
+const Moderation = require("../../mongoose/database/schemas/Moderation");
 
 module.exports = {
   name: "welcome",

@@ -1,10 +1,11 @@
 const { MessageEmbed } = require("discord.js");
-const Level = require("../mongoose/database/schemas/Level");
+const Level = require("../../mongoose/database/schemas/Level");
 
 module.exports = {
   name: "leaderboard",
   description: "Information about the Leaderboard",
   usage: "",
+  category: "level",
   permissions: {
     channel: ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS"],
     member: [],
@@ -48,7 +49,7 @@ module.exports = {
     //     // }${cmd.usage ? " " + cmd.usage : ""}\` - ${cmd.description}`
     // );
 
-    Embed.addField(`Version`, ` v${require("../package.json").version}`, false);
+    Embed.addField(`Version`, ` v${require("../../package.json").version}`, false);
 
 
     message.channel.send({embeds: [Embed]});

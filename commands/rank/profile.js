@@ -1,5 +1,5 @@
   const { MessageAttachment } = require("discord.js");
-  const Level = require("../mongoose/database/schemas/Level");
+  const Level = require("../../mongoose/database/schemas/Level");
   const empty = require('is-empty');
   const { DiscordCanvas } = require("karta-dharta");
   const fs = require('fs');
@@ -15,6 +15,7 @@
       member: [],
     },
     aliases: ["level"],
+    category: "level",
     /**
      *
      * @param {import("../structures/DiscordMusicBot")} client

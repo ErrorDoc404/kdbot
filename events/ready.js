@@ -6,5 +6,6 @@
     (client.Ready = true),
     client.user.setPresence(client.config.presence);
     client.log("Successfully Logged in as " + client.user.tag);
+    client.RegisterSlashCommands();
   };
   

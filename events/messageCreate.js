@@ -4,7 +4,7 @@ const client = require("../library/DiscordModerationBot");
 
 /**
  *
- * @param {import("../library/DiscordBot")} client
+ * @param {import("../library/DiscordModerationBot")} client
  */
 module.exports = async (client, message) => {
   if (message.author.bot || message.channel.type === "dm") return;

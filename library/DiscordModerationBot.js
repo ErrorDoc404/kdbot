@@ -20,6 +20,8 @@ class DiscordModerationBot extends Client {
 
         //creating sets
         this.commands = new Collection();
+        /**@type {Collection<string, import("./SlashCommand")} */
+        this.SlashCommands = new Collection();
         this.CommandsRan = 0;
 
         //Creating Web portal
@@ -39,6 +41,46 @@ class DiscordModerationBot extends Client {
 
         this.LoadEvents();
         this.LoadCommands();
+
+        let client = this;
+
+        // this.ws.on("INTERACTION_CREATE", async (interaction) => {
+        //   let GuildDB = await this.GetGuild(interaction.guild_id);
+    
+        //   //Initialize GuildDB
+        //   if (!GuildDB) {
+        //     await this.database.guild.set(interaction.guild_id, {
+        //       prefix: this.botconfig.DefaultPrefix,
+        //       DJ: null,
+        //     });
+        //     GuildDB = await this.GetGuild(interaction.guild_id);
+        //   }
+    
+        //   const command = interaction.data.name.toLowerCase();
+        //   const args = interaction.data.options;
+    
+        //   //Easy to send respnose so ;)
+        //   interaction.guild = await this.guilds.fetch(interaction.guild_id);
+        //   interaction.send = async (message) => {
+        //     return await this.api
+        //       .interactions(interaction.id, interaction.token)
+        //       .callback.post({
+        //         data: {
+        //           type: 4,
+        //           data:
+        //             typeof message == "string"
+        //               ? { content: message }
+        //               : message.type && message.type === "rich"
+        //               ? { embeds: [message] }
+        //               : message,
+        //         },
+        //       });
+        //   };
+    
+        //   let cmd = client.commands.get(command);
+        //   if (cmd.SlashCommand && cmd.SlashCommand.run)
+        //     cmd.SlashCommand.run(this, interaction, args, { GuildDB });
+        // });
 
     }
 
@@ -68,19 +110,80 @@ class DiscordModerationBot extends Client {
     }
     
     LoadCommands(){
-        fs.readdir('./commands/', async (err, files) => {
-          if (err) return logger.warn(`Command not been loading ${err}`);
-          files.forEach(file => {
-            let cmd = require(`../commands/${file}`);
-            if (!cmd.name || !cmd.description || !cmd.run)
-              return logger.warn(`Unable to load this command: ${file}`);
-            if (!file.endsWith('.js')) return;
-            let props = require(`../commands/${file}`);
-            let cmdName = file.split('.')[0];
-            this.commands.set(cmdName, props);
-            logger.commands(`Loaded command '${cmdName}'`);
-          });
+      //economy
+      let EconomyDir = path.join(__dirname, "..", "commands", "economy");
+      fs.readdir(EconomyDir, (err, files) => {
+        if(err) this.error(err);
+        files.forEach((file) => {
+          let cmd = require(EconomyDir + "/" + file);
+          if (!cmd.name || !cmd.description || !cmd.run){
+            return this.warn(`unable to load command: ${file.split(".")[0]}, Reason: File doesn't had run/name/desciption`);
+          }
+          let cmdName = file.split('.')[0].toLowerCase();
+          this.commands.set(cmdName, cmd);
+          logger.commands(`Loaded command '${cmdName}'`);
         });
+      });
+
+      //mod
+      let ModDir = path.join(__dirname, "..", "commands", "mods");
+      fs.readdir(ModDir, (err, files) => {
+        if(err) this.error(err);
+        files.forEach((file) => {
+          let cmd = require(ModDir + "/" + file);
+          if (!cmd.name || !cmd.description || !cmd.run){
+            return this.warn(`unable to load command: ${file.split(".")[0]}, Reason: File doesn't had run/name/desciption`);
+          }
+          let cmdName = file.split('.')[0].toLowerCase();
+          this.commands.set(cmdName, cmd);
+          logger.commands(`Loaded command '${cmdName}'`);
+        });
+      });
+
+      //Rank
+      let RankDir = path.join(__dirname, "..", "commands", "rank");
+      fs.readdir(RankDir, (err, files) => {
+        if(err) this.error(err);
+        files.forEach((file) => {
+          let cmd = require(RankDir + "/" + file);
+          if (!cmd.name || !cmd.description || !cmd.run){
+            return this.warn(`unable to load command: ${file.split(".")[0]}, Reason: File doesn't had run/name/desciption`);
+          }
+          let cmdName = file.split('.')[0].toLowerCase();
+          this.commands.set(cmdName, cmd);
+          logger.commands(`Loaded command '${cmdName}'`);
+        });
+      });
+
+      //Other
+      let OtherDir = path.join(__dirname, "..", "commands", "others");
+      fs.readdir(OtherDir, (err, files) => {
+        if(err) this.error(err);
+        files.forEach((file) => {
+          let cmd = require(OtherDir + "/" + file);
+          if (!cmd.name || !cmd.description || !cmd.run){
+            return this.warn(`unable to load command: ${file.split(".")[0]}, Reason: File doesn't had run/name/desciption`);
+          }
+          let cmdName = file.split('.')[0].toLowerCase();
+          this.commands.set(cmdName, cmd);
+          logger.commands(`Loaded command '${cmdName}'`);
+        });
+      });
+
+      //Utilities
+      let UtilDir = path.join(__dirname, "..", "commands", "utilities");
+      fs.readdir(UtilDir, (err, files) => {
+        if(err) this.error(err);
+        files.forEach((file) => {
+          let cmd = require(UtilDir + "/" + file);
+          if (!cmd.name || !cmd.description || !cmd.run){
+            return this.warn(`unable to load command: ${file.split(".")[0]}, Reason: File doesn't had run/name/desciption`);
+          }
+          let cmdName = file.split('.')[0].toLowerCase();
+          this.commands.set(cmdName, cmd);
+          logger.commands(`Loaded command '${cmdName}'`);
+        });
+      });
     }
 
     build(token){
@@ -136,6 +239,12 @@ class DiscordModerationBot extends Client {
           .setDescription(Message)
     
         Channel.send({embeds: [embed]});
+    }
+
+    RegisterSlashCommands(){
+      this.guilds.cache.forEach((guild) => {
+        require("./SlashCommand")(this, guild.id);
+      });
     }
 
 }

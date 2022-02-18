@@ -5,14 +5,78 @@ const config = require("../config");
 const Auth = require("./Middlewares/Auth");
 const fs = require("fs");
 
-let CommandsDir = join(__dirname, "..", "commands");
+let EconomyDir = join(__dirname, "..", "commands", "economy");
+let ModDir = join(__dirname, "..", "commands", "mods");
+let RankDir = join(__dirname, "..", "commands", "rank");
+let OtherDir = join(__dirname, "..", "commands", "others");
+let UtilDir = join(__dirname, "..", "commands", "utilities");
 let Commands = [];
 
-fs.readdir(CommandsDir, (err, files) => {
+fs.readdir(EconomyDir, (err, files) => {
   if (err) console.log(err);
   else
     files.forEach((file) => {
-      let cmd = require(CommandsDir + "/" + file);
+      let cmd = require(EconomyDir + "/" + file);
+      if (!cmd.name || !cmd.description || !cmd.run) return;
+      Commands.push({
+        name: cmd.name,
+        aliases: cmd.aliases,
+        usage: cmd.usage,
+        description: cmd.description,
+      });
+    });
+});
+
+fs.readdir(ModDir, (err, files) => {
+  if (err) console.log(err);
+  else
+    files.forEach((file) => {
+      let cmd = require(ModDir + "/" + file);
+      if (!cmd.name || !cmd.description || !cmd.run) return;
+      Commands.push({
+        name: cmd.name,
+        aliases: cmd.aliases,
+        usage: cmd.usage,
+        description: cmd.description,
+      });
+    });
+});
+
+fs.readdir(RankDir, (err, files) => {
+  if (err) console.log(err);
+  else
+    files.forEach((file) => {
+      let cmd = require(RankDir + "/" + file);
+      if (!cmd.name || !cmd.description || !cmd.run) return;
+      Commands.push({
+        name: cmd.name,
+        aliases: cmd.aliases,
+        usage: cmd.usage,
+        description: cmd.description,
+      });
+    });
+});
+
+fs.readdir(OtherDir, (err, files) => {
+  if (err) console.log(err);
+  else
+    files.forEach((file) => {
+      let cmd = require(OtherDir + "/" + file);
+      if (!cmd.name || !cmd.description || !cmd.run) return;
+      Commands.push({
+        name: cmd.name,
+        aliases: cmd.aliases,
+        usage: cmd.usage,
+        description: cmd.description,
+      });
+    });
+});
+
+fs.readdir(UtilDir, (err, files) => {
+  if (err) console.log(err);
+  else
+    files.forEach((file) => {
+      let cmd = require(UtilDir + "/" + file);
       if (!cmd.name || !cmd.description || !cmd.run) return;
       Commands.push({
         name: cmd.name,

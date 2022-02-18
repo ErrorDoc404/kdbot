@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const Economy = require("../mongoose/database/schemas/Economy");
+const Economy = require("../../mongoose/database/schemas/Economy");
 const empty = require('is-empty');
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
       member: [],
     },
     aliases: ["bal"],
+    category: "economy",
     run: async (client, message, args, { GuildDB }) => {
         if(!empty(args)){ 
             member = message.mentions.members.first();

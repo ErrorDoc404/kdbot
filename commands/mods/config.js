@@ -1,10 +1,11 @@
 const { MessageEmbed, MessageReaction } = require("discord.js");
-const GuildConfig = require("../mongoose/database/schemas/GuildConfig");
+const GuildConfig = require("../../mongoose/database/schemas/GuildConfig");
 
 module.exports = {
   name: "config",
   description: "Edit the bot settings",
   usage: "",
+  category: "moderation",
   permissions: {
     channel: ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS"],
     member: ["ADMINISTRATOR"],

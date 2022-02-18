@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const Level = require("../mongoose/database/schemas/Level");
+const Level = require("../../mongoose/database/schemas/Level");
 
 module.exports = {
     name: "rcolor",
@@ -10,6 +10,7 @@ module.exports = {
       member: [""],
     },
     aliases: ["rankcolor"],
+    category: "level",
     /**
      *
      * @param {import("../structures/DiscordMusicBot")} client
