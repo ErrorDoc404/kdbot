@@ -30,7 +30,7 @@ module.exports = {
         data = data.embed;
         const embed = new MessageEmbed(data);
 
-        return interaction.reply({ embeds: [embed] });
+        return interaction.reply({ embeds: [embed] }).catch((err) => client.error(err));;
       }
     }
 };

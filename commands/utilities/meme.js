@@ -34,7 +34,7 @@ module.exports = {
         data = data.embed;
         let meme = new MessageEmbed(data);
 
-        return interaction.reply({ embeds: [meme] });
+        return interaction.reply({ embeds: [meme] }).catch((err) => client.error(err));
       },
     },
 };
