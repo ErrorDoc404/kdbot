@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
+    Id: process.env.Discord_ClientID,
     prefix: process.env.PREFIX || '!',
     Admins: ["UserID", "UserID"],
     buildToken: process.env.BUILD_TOKEN || 'build token',

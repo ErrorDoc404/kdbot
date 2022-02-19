@@ -1,20 +1,25 @@
+const { Client } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
 
 /**
  * Register slash commands for a guild
  * @param {require("../structures/DiscordMusicBot")} client
  * @param {string} guild
  */
-module.exports = (client, guild) => {
-    client.warn("Registering slash commands for " + guild);
 
-    let commandsDir = path.join(__dirname, "..", "commands", "others");
+module.exports = (client) => {
 
-    fs.readdir(commandsDir, (err, files) => {
-        if (err) throw err;
+    const commands = [];
+    const categories = fs.readdirSync(__dirname + '/../commands/');
+      categories.filter((cat) => !cat.endsWith('.js')).forEach((cat) => {
+        const files = fs.readdirSync(__dirname + `/../commands/${cat}/`).filter((f) =>
+          f.endsWith('.js')
+        );
         files.forEach(async (file) => {
-            let cmd = require(commandsDir + "/" + file);
+            let cmd = require(__dirname + `/../commands/${cat}/` + file);
             if (!cmd.SlashCommand || !cmd.SlashCommand.run) return;
 
             let dataStuff = {
@@ -23,70 +28,24 @@ module.exports = (client, guild) => {
                 options: cmd.SlashCommand.options,
             };
 
-            //Creating variables like this, So you might understand my code :)
-            let ClientAPI = client.api.applications(client.user.id);
-            let GuildAPI = ClientAPI.guilds(guild);
-
-            client.log(
-                "[Slash Command]: [POST] Guild " +
-                  guild +
-                  ", Command: " +
-                  dataStuff.name
-            );
-
-            try {
-                await GuildAPI.commands.post({ data: dataStuff });
-            } catch (e) {
-                client.log(
-                    "[Slash Command]: [POST-FAILED] Guild " +
-                    guild +
-                    ", Command: " +
-                    dataStuff.name
-                );
-                console.log(e);
-            }
+            commands.push(dataStuff);
         })
     });
 
+    const rest = new REST({ version: '9' }).setToken(client.config.Token);
 
-    //Utilities
-
-    let utilDir = path.join(__dirname, "..", "commands", "utilities");
-
-    fs.readdir(utilDir, (err, files) => {
-        if (err) throw err;
-        files.forEach(async (file) => {
-            let cmd = require(utilDir + "/" + file);
-            if (!cmd.SlashCommand || !cmd.SlashCommand.run) return;
-
-            let dataStuff = {
-                name: cmd.name,
-                description: cmd.description,
-                options: cmd.SlashCommand.options,
-            };
-
-            //Creating variables like this, So you might understand my code :)
-            let ClientAPI = client.api.applications(client.user.id);
-            let GuildAPI = ClientAPI.guilds(guild);
-
-            client.log(
-                "[Slash Command]: [POST] Guild " +
-                  guild +
-                  ", Command: " +
-                  dataStuff.name
+    (async () => {
+        try {
+            client.log('Started refreshing application Slash commands.');
+    
+            await rest.put(
+                Routes.applicationCommands(client.config.Id),
+                { body: commands },
             );
-
-            try {
-                await GuildAPI.commands.post({ data: dataStuff });
-            } catch (e) {
-                client.log(
-                    "[Slash Command]: [POST-FAILED] Guild " +
-                    guild +
-                    ", Command: " +
-                    dataStuff.name
-                );
-                console.log(e);
-            }
-        })
-    });
+    
+            client.log('Successfully reloaded application SLash commands.');
+        } catch (error) {
+            client.error(error);
+        }
+    })();
 };

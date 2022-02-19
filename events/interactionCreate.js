@@ -18,4 +18,6 @@ module.exports = async (client, interaction) => {
     if(!cmd) return;
     if (cmd.SlashCommand && cmd.SlashCommand.run)
         cmd.SlashCommand.run(client, interaction, args, { GuildDB });
+
+    client.CommandsRan++;
 };

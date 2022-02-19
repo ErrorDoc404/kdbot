@@ -40,6 +40,4 @@ module.exports = async (client, guild) => {
   }catch (err){
     console.log(err);
   }
-
-  require("../library/SlashCommand")(client, guild.id);
 };

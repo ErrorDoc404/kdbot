@@ -1,6 +1,5 @@
 const random = require("karta-dharta").Random;
 const { MessageEmbed } = require('discord.js');
-const { Server } = require("socket.io");
 
 module.exports = {
     name: "advice",

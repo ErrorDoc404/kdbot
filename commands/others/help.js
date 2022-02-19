@@ -54,6 +54,14 @@ module.exports = {
       return message.channel.send({embeds: [embed]});
     }
 
+    const emojis = {
+      economy: '💸',
+      moderation: '🛠️',
+      info: 'ℹ️',
+      level: '📈',
+      utilities: '🧪'
+    }
+
     const directories = [...new Set(client.commands.map(cmd => cmd.category))];
     
     const formatString = (srt) => `${srt[0].toUpperCase()}${srt.slice(1).toLowerCase()}`;
@@ -81,7 +89,8 @@ module.exports = {
               return {
                 label: cmd.directory,
                 value: cmd.directory.toLowerCase(),
-                description: `Commands from ${cmd.directory} Category`
+                description: `Commands from ${cmd.directory} Category`,
+                emoji: emojis[cmd.directory.toLowerCase()] || null,
               }
             })
           )
