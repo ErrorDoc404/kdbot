@@ -56,4 +56,9 @@ module.exports = {
             console.log(err);
           }
     },
+    // SlashCommand: {
+    //   run: async () => {
+        
+    //   }
+    // }
 };

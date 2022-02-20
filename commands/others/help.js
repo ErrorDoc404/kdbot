@@ -60,7 +60,8 @@ module.exports = {
       info: 'ℹ️',
       level: '📈',
       utilities: '🧪',
-      image: '🖼️'
+      image: '🖼️',
+      activity: '🎮'
     }
 
     const directories = [...new Set(client.commands.map(cmd => cmd.category))];
@@ -165,6 +166,10 @@ module.exports = {
           {
             name: 'Image',
             value: 'image',
+          },
+          {
+            name: 'Activity',
+            value: 'activity',
           }
         ],
       }
@@ -180,7 +185,7 @@ module.exports = {
       if(!args){
         const embed = new MessageEmbed();
         const commands = client.commands;
-        embed.setTitle(`Commands for ${client.name}`);
+        embed.setTitle(`Commands for ${client.user.username}`);
         commands.forEach((cmd) => {
           embed.addFields({name: `${GuildDB ? GuildDB.prefix : '!' }${cmd.name}`,value: `\`${cmd.description}\``,inline: true});
         });

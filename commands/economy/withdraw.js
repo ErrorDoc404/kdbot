@@ -71,4 +71,18 @@ module.exports = {
             message.channel.send({embeds: [argument]});
         }
     },
+    // SlashCommand: {
+    //     options: [
+    //         {
+    //             name: "amount",
+    //             description: "how much you want to deposit",
+    //             value: "amount",
+    //             type: 4,
+    //             required: false,
+    //         },
+    //     ],
+    //     run : async (client, interaction, args, {GuildDB}) => {
+            
+    //     }
+    // }
 };
