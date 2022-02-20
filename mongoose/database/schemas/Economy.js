@@ -28,6 +28,11 @@ const EconomySchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.Date,
     require: false,
     default: '1990-01-01T00:00:00.000+00:00',
+  },
+  robTime: {
+    type: mongoose.SchemaTypes.Date,
+    require: false,
+    default: '1990-01-01T00:00:00.000+00:00',
   }
 });
 

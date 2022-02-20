@@ -62,7 +62,6 @@ module.exports = {
       const guild = GuildDB;
       try{
         const findEconomy = await Economy.findOne({guildId: guild.guildId, userId: member.id });
-        console.log(findEconomy);
         if(findEconomy){
           const msg = new MessageEmbed()
               .setColor("#FFFFFF")
@@ -71,7 +70,7 @@ module.exports = {
           return interaction.reply({embeds: [msg]}).catch((err) => {client.error(err)});
         } else {
           const newEconomy = await Economy.create({
-            guildId: guild.id,
+            guildId: guild.guildId,
             userId: member.id,
           });
           // when account not found on economy database
