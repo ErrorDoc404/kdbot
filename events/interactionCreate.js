@@ -12,10 +12,12 @@ module.exports = async (client, interaction) => {
     }
 
     const command = interaction.commandName;
-    const args = interaction.options;
-
+    
     let cmd = client.commands.get(command);
     if(!cmd) return;
+
+    const args = interaction.options._hoistedOptions[0];
+
     if (cmd.SlashCommand && cmd.SlashCommand.run)
         cmd.SlashCommand.run(client, interaction, args, { GuildDB });
 

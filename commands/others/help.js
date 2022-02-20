@@ -59,7 +59,8 @@ module.exports = {
       moderation: '🛠️',
       info: 'ℹ️',
       level: '📈',
-      utilities: '🧪'
+      utilities: '🧪',
+      image: '🖼️'
     }
 
     const directories = [...new Set(client.commands.map(cmd => cmd.category))];
@@ -114,7 +115,7 @@ module.exports = {
       categoryEmbed.setTitle(`${category.directory} Commands`);
       categoryEmbed.setDescription(`Here are the list of commands`);
       category.commands.map((cmd) => { 
-        categoryEmbed.addField(cmd.name, `\`${cmd.description}\``, true);
+        categoryEmbed.addField(`${GuildDB ? GuildDB.prefix : '!' }${cmd.name}`, `\`${cmd.description}\``, true);
       });
 
       interaction.update({embeds: [categoryEmbed]});
@@ -125,61 +126,114 @@ module.exports = {
     });
 
   },
-  
-  // run: async (client, message, args, { GuildDB }) => {
+  SlashCommand: {
+    options: [
+      {
+        name: "command",
+        description: "Get information on a specific command",
+        value: "command",
+        type: 3,
+        required: false,
+      },
+      {
+        name: "category",
+        description: "Get information on a specific Category",
+        value: "category",
+        type: 3,
+        required: false,
+        choices: [
+          {
+            name: 'Economy',
+            value: 'economy',
+          },
+          {
+            name: 'Moderation',
+            value: 'moderation',
+          },
+          {
+            name: 'Info',
+            value: 'info',
+          },
+          {
+            name: 'Level',
+            value: 'level',
+          },
+          {
+            name: 'Utility',
+            value: 'utilities',
+          },
+          {
+            name: 'Image',
+            value: 'image',
+          }
+        ],
+      }
+    ],
+    /**
+     *
+     * @param {import("../structures/DiscordMusicBot")} client
+     * @param {import("discord.js").Message} message
+     * @param {string[]} args
+     * @param {*} param3
+     */
+    run: async (client, interaction, args, { GuildDB }) => {
+      if(!args){
+        const embed = new MessageEmbed();
+        const commands = client.commands;
+        embed.setTitle(`Commands for ${client.name}`);
+        commands.forEach((cmd) => {
+          embed.addFields({name: `${GuildDB ? GuildDB.prefix : '!' }${cmd.name}`,value: `\`${cmd.description}\``,inline: true});
+        });
+        return interaction.reply({embeds: [embed]}).catch((err) => {client.error(err)});
+      }else if (args.name == 'category'){
+        const embed = new MessageEmbed();
+        const cat = args.value;
+        const commands = client.commands;
+        const catCommands = [];
+        commands.forEach((cmd) => {
+          if(cmd.category != cat) return;
+          catCommands.push(cmd);
+        });
+        embed.setTitle(`Commands for ${args.value} category`);
+        catCommands.forEach((catCmd) => {
+          embed.addFields({name: `${GuildDB ? GuildDB.prefix : '!' }${catCmd.name}`,value: `\`${catCmd.description}\``,inline: true});
+        });
+        return interaction.reply({embeds: [embed]}).catch((err) => {client.error(err)});
+      } else if(args.name == 'command') {
+        let cmd = client.commands.get(args.value) || client.commands.find((x) => x.aliases && x.aliases.includes(args.value));
 
-  //   let Embed = new MessageEmbed()
-  //     .setTitle(
-  //       `Commands of ${client.user.username}`,
-  //     )
-  //     .setColor(client.config.EmbedColor)
+        if(!cmd){
+          let notFound = new MessageEmbed();
+          notFound.setColor(`RED`);
+          notFound.setDescription(`❌ | Unable to find that command.`);
 
+          return interaction.reply({embeds: [notFound]}).catch((err) => {client.error(err)});
+        };
+        
+        let embed = new MessageEmbed()
+        .setTitle(`Command: ${cmd.name}`)
+        .setDescription(cmd.description)
+        .setColor("GREEN")
+        //.addField("Name", cmd.name, true)
+        .addField("Aliases", `\`${cmd.aliases.join(", ")}\``, true)
+        .addField(
+          "Usage",
+          `\`${GuildDB ? GuildDB.prefix : client.config.DefaultPrefix}${
+            cmd.name
+          }${cmd.usage ? " " + cmd.usage : ""}\``,
+          true
+        )
+        .addField(
+          "Permissions",
+          "Member: " +
+            cmd.permissions.member.join(", ") +
+            "\nBot: " +
+            cmd.permissions.channel.join(", "),
+          true
+        );
 
-  //   let Commands = client.commands.map(
-  //     (cmd) =>
-  //     Embed.addField(`${GuildDB ? GuildDB.prefix : client.config.DefaultPrefix}${cmd.name}`, `${cmd.description}`, true)
-  //       // `\`${GuildDB ? GuildDB.prefix : client.config.DefaultPrefix}${
-  //       //   cmd.name
-  //       // }${cmd.usage ? " " + cmd.usage : ""}\` - ${cmd.description}`
-  //   );
-
-  //   Embed.addField(`Version`, ` v${require("../package.json").version}`, false);
-
-
-  //   if (!args[0]) message.channel.send({embeds: [Embed]});
-  //   else {
-  //     let cmd =
-  //       client.commands.get(args[0]) ||
-  //       client.commands.find((x) => x.aliases && x.aliases.includes(args[0]));
-  //     if (!cmd)
-  //       return client.sendTime(
-  //         message.channel,
-  //         `❌ | Unable to find that command.`
-  //       );
-
-  //     let embed = new MessageEmbed()
-  //       .setTitle(`Command: ${cmd.name}`)
-  //       .setDescription(cmd.description)
-  //       .setColor("GREEN")
-  //       //.addField("Name", cmd.name, true)
-  //       .addField("Aliases", `\`${cmd.aliases.join(", ")}\``, true)
-  //       .addField(
-  //         "Usage",
-  //         `\`${GuildDB ? GuildDB.prefix : client.config.DefaultPrefix}${
-  //           cmd.name
-  //         }${cmd.usage ? " " + cmd.usage : ""}\``,
-  //         true
-  //       )
-  //       .addField(
-  //         "Permissions",
-  //         "Member: " +
-  //           cmd.permissions.member.join(", ") +
-  //           "\nBot: " +
-  //           cmd.permissions.channel.join(", "),
-  //         true
-  //       )
-
-  //     message.channel.send({embeds: [embed]});
-  //   }
-  // }
+        return interaction.reply({embeds: [embed]}).catch((err) => {client.error(err)});
+      }
+    }
+  }
 };

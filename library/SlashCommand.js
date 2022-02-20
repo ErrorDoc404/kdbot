@@ -20,7 +20,11 @@ module.exports = (client) => {
         );
         files.forEach(async (file) => {
             let cmd = require(__dirname + `/../commands/${cat}/` + file);
-            if (!cmd.SlashCommand || !cmd.SlashCommand.run) return;
+            if(!cmd.SlashCommand) return;
+            if (!cmd.SlashCommand || !cmd.SlashCommand.run) 
+                return client.warn(`Problem for loading ${cmd.name} Slash Command because it didn't found run body`);
+
+            client.warn(`Loading ${cmd.name} Slash Command`);
 
             let dataStuff = {
                 name: cmd.name,
@@ -43,9 +47,9 @@ module.exports = (client) => {
                 { body: commands },
             );
     
-            client.log('Successfully reloaded application SLash commands.');
+            client.log('Successfully reloaded application Slash commands.');
         } catch (error) {
-            client.error(error);
+            console.error(error);
         }
     })();
 };

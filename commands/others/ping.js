@@ -160,7 +160,7 @@ require("moment-duration-format");
             }
           );
 
-          return interaction.reply({ embeds: [embed] }).catch((err) => client.error(err));;
+          return interaction.reply({ embeds: [embed] }).catch((err) => client.error(err));
         });
       }
     },
