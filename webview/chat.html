@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="../favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Dashboard
+    Random Chat
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -17,6 +17,7 @@
   <link href="../panel/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="../panel/demo/demo.css" rel="stylesheet" />
+  <link href="../css/chat.css" rel="stylesheet" />
 </head>
 
 <body class="dark-edition">
@@ -27,7 +28,7 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="/dashboard">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
@@ -39,7 +40,7 @@
               <p>Passbook</p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/chat">
               <i class="material-icons">message</i>
               <p>Chat</p>
@@ -95,7 +96,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+            <a class="navbar-brand" href="javascript:void(0)">Random Chat: <i class="material-icons">person_add</i><span  id="users"> 0</span> User</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
             <span class="sr-only">Toggle navigation</span>
@@ -150,107 +151,29 @@
           </div>
         </div>
       </nav>
+      <hr>
       <!-- End Navbar -->
-      <div class="content" id="app-server">
+      <div class="content" id="chat">
         <div class="container-fluid">
-          
-          <div class="row">
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-warning card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">rocket</i>
-                  </div>
-                  <p class="card-category">Commands ran</p>
-                  <h3 class="card-title text-warning" id="commands">0</h3>
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-success card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">store</i>
-                  </div>
-                  <p class="card-category">Users</p>
-                  <h3 class="card-title text-success" id="users">0</h3>
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-danger card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">ping</i>
-                  </div>
-                  <p class="card-category">Ping</p>
-                  <h3 class="card-title text-danger" id="ping">0</h3>
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-              <div class="card card-stats">
-                <div class="card-header card-header-info card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons">discord</i>
-                  </div>
-                  <p class="card-category">Servers</p>
-                  <h3 class="card-title text-info" id="servers">0</h3>
-                </div>
-                <div class="card-footer">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xl-4 col-lg-12" v-for="guild in guilds" v-if="guild.hasPerms">
-              <div class="card card-stats">
-                <div class="card-header card-header-icon" v-bind:class="[guild.inGuild ? 'card-header-success' : 'card-header-warning']">
-                  <div class="card-icon row" style="float: none; margin-left: 0;">
-                    <div class="image mr-3 " v-if="guild.icon"> <img v-bind:src="'https://cdn.discordapp.com/icons/'+guild.id+'/'+guild.icon" class="rounded-circle" width="60" /> </div>
-                    <div class="image mr-3 " v-else> <img src="https://cdn.logojoy.com/wp-content/uploads/20210422095037/discord-mascot.png" class="rounded-circle" width="60" /> </div>
-                    <h3 class="card-title"  style="font-style: bold; color: white;">{{guild.name}}</h3>
-                  </div>
-                  <h3 class="card-title text-warning">
-                    <span v-for="data in cache">
-                      <span v-if="guild.inGuild && data.id === guild.id">{{data.channels.length}} Channels || {{data.members.length}} Members</span>
-                    </span>
-                    <span v-if="guild.inGuild === false">Not in Server</span>
-                  </h3>
-                </div>
-                <div class="card-footer">
-                  <div class="third mt-4" v-if="guild.inGuild">
-                    <a v-bind:href="'/server/'+guild.id">
-                      <button class="btn btn-primary btn-block">
-                        <i class="material-icons">dashboard</i> Go to Dashboard
-                      </button>
-                    </a>
-                  </div>
-                  <div class="third mt-4" v-else>
-                    <a v-bind:href="'https://discord.com/oauth2/authorize?client_id='+guild.client_id+'&permissions=2205280576&scope=bot%20identify%20guilds%20applications.commands&redirect_url=./api/auth/discord/redirect&response_type=code&guild_id='+guild.id">
-                      <button class="btn btn-primary btn-block">
-                        <i class="material-icons">add</i> Add Bot
-                      </button>
-                    </a>
-                  </div>
-                </div>
-              </div>
+          <main class="chat-main">
+            <div class="chat-messages"></div>
+          </main>
+          <div class="chat-container">
+            <div class="chat-form-container">
+              <form id="chat-form" action="#" onsubmit="return false">
+                <input
+                  id="msg"
+                  type="text"
+                  placeholder="Enter Message"
+                  required
+                  autocomplete="off"
+                  class="form-control form-control-lg"
+                />
+              </form>
             </div>
           </div>
         </div>
       </div>
-      
-      <script>
-        const x = new Date().getFullYear();
-        let date = document.getElementById('date');
-        date.innerHTML = '&copy; ' + x + date.innerHTML;
-      </script>
     </div>
   </div>
   <div class="fixed-plugin">
@@ -316,7 +239,7 @@
   <script src="../panel/demo/demo.js"></script>
   <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
   <script src="https://unpkg.com/vue@2.5.22/dist/vue.min.js"></script>
-  <script src="vue/server.js"></script>
+  <script src="js/chat.js"></script>
   <script>
     $(document).ready(function() {
       $().ready(function() {
@@ -483,20 +406,6 @@
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-    });
-  </script>
-  <script>
-    $(document).ready(() => {
-      var socket = io();
-      socket.emit("dashboard");
-      socket.on("dashboard", (data) => {
-        $("#commands").text(data.commands);
-        $("#users").text(data.users);
-        $("#ping").text(data.ping);
-        $("#servers").text(data.guilds);
-      });
-
-      
     });
   </script>
 </body>

@@ -27,20 +27,20 @@
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="/dashboard">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="/passbook">
               <i class="material-icons">library_books</i>
               <p>Passbook</p>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/chat">
+            <a class="nav-link" href="/chat?#">
               <i class="material-icons">message</i>
               <p>Chat</p>
             </a>
@@ -151,7 +151,7 @@
         </div>
       </nav>
       <!-- End Navbar -->
-      <div class="content" id="app-server">
+      <div class="content" id="app-passbook">
         <div class="container-fluid">
           
           <div class="row">
@@ -159,10 +159,10 @@
               <div class="card card-stats">
                 <div class="card-header card-header-warning card-header-icon">
                   <div class="card-icon">
-                    <i class="material-icons">rocket</i>
+                    <i class="material-icons">money</i>
                   </div>
-                  <p class="card-category">Commands ran</p>
-                  <h3 class="card-title text-warning" id="commands">0</h3>
+                  <p class="card-category">Total Cash</p>
+                  <h3 class="card-title text-warning">⌘ <span id="totalCash">0</span></h3>
                 </div>
                 <div class="card-footer">
                 </div>
@@ -172,10 +172,10 @@
               <div class="card card-stats">
                 <div class="card-header card-header-success card-header-icon">
                   <div class="card-icon">
-                    <i class="material-icons">store</i>
+                    <i class="material-icons">badge</i>
                   </div>
-                  <p class="card-category">Users</p>
-                  <h3 class="card-title text-success" id="users">0</h3>
+                  <p class="card-category">Total Cash in Pocket</p>
+                  <h3 class="card-title text-success">⌘ <span id="totalPocket">0</span></h3>
                 </div>
                 <div class="card-footer">
                 </div>
@@ -185,10 +185,10 @@
               <div class="card card-stats">
                 <div class="card-header card-header-danger card-header-icon">
                   <div class="card-icon">
-                    <i class="material-icons">ping</i>
+                    <i class="material-icons">badge</i>
                   </div>
-                  <p class="card-category">Ping</p>
-                  <h3 class="card-title text-danger" id="ping">0</h3>
+                  <p class="card-category">Silver Pass</p>
+                  <h3 class="card-title text-danger">⌘ <span id="totalBank">0</span></h3>
                 </div>
                 <div class="card-footer">
                 </div>
@@ -198,47 +198,25 @@
               <div class="card card-stats">
                 <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
-                    <i class="material-icons">discord</i>
+                    <i class="material-icons">badge</i>
                   </div>
-                  <p class="card-category">Servers</p>
-                  <h3 class="card-title text-info" id="servers">0</h3>
+                  <p class="card-category">Gold Pass</p>
+                  <h3 class="card-title text-info" id="goldPass">false</h3>
                 </div>
                 <div class="card-footer">
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-xl-4 col-lg-12" v-for="guild in guilds" v-if="guild.hasPerms">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6" v-for="bank in banks">
               <div class="card card-stats">
-                <div class="card-header card-header-icon" v-bind:class="[guild.inGuild ? 'card-header-success' : 'card-header-warning']">
-                  <div class="card-icon row" style="float: none; margin-left: 0;">
-                    <div class="image mr-3 " v-if="guild.icon"> <img v-bind:src="'https://cdn.discordapp.com/icons/'+guild.id+'/'+guild.icon" class="rounded-circle" width="60" /> </div>
-                    <div class="image mr-3 " v-else> <img src="https://cdn.logojoy.com/wp-content/uploads/20210422095037/discord-mascot.png" class="rounded-circle" width="60" /> </div>
-                    <h3 class="card-title"  style="font-style: bold; color: white;">{{guild.name}}</h3>
+                <div class="card-header card-header-info card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">discord</i>
                   </div>
-                  <h3 class="card-title text-warning">
-                    <span v-for="data in cache">
-                      <span v-if="guild.inGuild && data.id === guild.id">{{data.channels.length}} Channels || {{data.members.length}} Members</span>
-                    </span>
-                    <span v-if="guild.inGuild === false">Not in Server</span>
-                  </h3>
+                  <p class="card-category">{{bank.name}}</p>
+                  <h3 class="card-title text-info" id="goldPass">{{bank.cash}}</h3>
                 </div>
                 <div class="card-footer">
-                  <div class="third mt-4" v-if="guild.inGuild">
-                    <a v-bind:href="'/server/'+guild.id">
-                      <button class="btn btn-primary btn-block">
-                        <i class="material-icons">dashboard</i> Go to Dashboard
-                      </button>
-                    </a>
-                  </div>
-                  <div class="third mt-4" v-else>
-                    <a v-bind:href="'https://discord.com/oauth2/authorize?client_id='+guild.client_id+'&permissions=2205280576&scope=bot%20identify%20guilds%20applications.commands&redirect_url=./api/auth/discord/redirect&response_type=code&guild_id='+guild.id">
-                      <button class="btn btn-primary btn-block">
-                        <i class="material-icons">add</i> Add Bot
-                      </button>
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
@@ -316,7 +294,7 @@
   <script src="../panel/demo/demo.js"></script>
   <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
   <script src="https://unpkg.com/vue@2.5.22/dist/vue.min.js"></script>
-  <script src="vue/server.js"></script>
+  <script src="vue/passbook.js"></script>
   <script>
     $(document).ready(function() {
       $().ready(function() {
@@ -486,17 +464,19 @@
     });
   </script>
   <script>
-    $(document).ready(() => {
+    $(document).ready(async () => {
       var socket = io();
-      socket.emit("dashboard");
-      socket.on("dashboard", (data) => {
-        $("#commands").text(data.commands);
-        $("#users").text(data.users);
-        $("#ping").text(data.ping);
-        $("#servers").text(data.guilds);
+      $.get('/api/user')
+      .then(data => {
+        var user = data.user;
+        var userBank = [];
+        socket.emit("passport",{userId: user.discordId});
+        socket.on("passport", (data) => {
+          $("#totalCash").text(data.total);
+          $("#totalPocket").text(data.pocket);
+          $("#totalBank").text(data.bank);
+        });
       });
-
-      
     });
   </script>
 </body>
