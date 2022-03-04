@@ -183,13 +183,7 @@ module.exports = {
      */
     run: async (client, interaction, args, { GuildDB }) => {
       if(!args){
-        const embed = new MessageEmbed();
-        const commands = client.commands;
-        embed.setTitle(`Commands for ${client.user.username}`);
-        commands.forEach((cmd) => {
-          embed.addFields({name: `${GuildDB ? GuildDB.prefix : '!' }${cmd.name}`,value: `\`${cmd.description}\``,inline: true});
-        });
-        return interaction.reply({embeds: [embed]}).catch((err) => {client.error(err)});
+        return interaction.reply(`Select either category or commnad`).catch((err) => {client.error(err)});
       }else if (args.name == 'category'){
         const embed = new MessageEmbed();
         const cat = args.value;

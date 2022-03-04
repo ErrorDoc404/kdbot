@@ -17,8 +17,7 @@
         if(findMemberAddModule.guildMemberAdd){
           const findMemberAddModeration = await Moderation.findOne({guildId: member.guild.id});
           var welcome_channel = member.guild.channels.cache.get(findMemberAddModeration.welcomeChannel);
-          var image = empty(member.user.avatarURL()) ? member.user.defaultAvatarURL : member.user.avatarURL() ;
-    
+          var image = empty(member.user.avatarURL()) ? member.user.defaultAvatarURL : member.user.avatarURL() ;    
     
           var images = [];
     
@@ -43,11 +42,19 @@
             }else {
               welcome_channel.send({content: `Welcome to the server, ${member.user.username}!`, files: [attachment]});
             }
-    
-            const findGuildConfig = await GuildConfig.findOne({guildId: member.guild.id});
-    
-            if(findGuildConfig.defaultRole)
-              member.roles.add(findGuildConfig.defaultRole);
+          });
+        }
+
+        const findGuildConfig = await GuildConfig.findOne({guildId: member.guild.id});
+  
+        if(findGuildConfig.defaultRole){
+          member.roles.add(findGuildConfig.defaultRole).catch((err) => {
+            client.error(`Missing Access: ${err}`);
+
+            if(findGuildConfig.memberLogChannel){
+              const logChannel = member.guild.channels.cache.get(findGuildConfig.memberLogChannel);
+              logChannel.send(`Missing Access -> Can't grant join member role. Make sure my role is above granting role`);
+            }
           });
         }
    } catch(error){
