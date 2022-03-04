@@ -27,16 +27,17 @@ What would you like to edit?
 :one:   - Server Prefix
 :two:   - Moderator Role
 :three: - Member join Role
+:four: - Server Log Channel
 `);
 
     let ConfigMessage = await message.channel.send({embeds: [Config]});
     await ConfigMessage.react("1️⃣");
     await ConfigMessage.react("2️⃣");
     await ConfigMessage.react("3️⃣");
-    // await ConfigMessage.react("4️⃣");
+    await ConfigMessage.react("4️⃣");
 
     const filter = (reaction, user) => {
-        return user.id === message.author.id && ["1️⃣", "2️⃣","3️⃣"].includes(reaction.emoji.name);
+        return user.id === message.author.id && ["1️⃣", "2️⃣","3️⃣","4️⃣"].includes(reaction.emoji.name);
     };
 
     let emoji = await ConfigMessage.awaitReactions({ filter, max: 1, time: 30000, errors: ['time'] })
@@ -170,6 +171,41 @@ What would you like to edit?
         return client.sendTime(message.channel, "You took too long to respond");
       });
       
-    }
+    } else if (em._emoji.name === "4️⃣") {
+      await client.sendTime(
+        message.channel,
+        "Which channel do you want to set the logging to?"
+      );
+      const msgFilter = (msg) => {
+          return msg.author.id === message.author.id
+      }
+      await message.channel.awaitMessages({ filter: msgFilter, max: 1, time: 30000, errors: ["time"] })
+      .then(async logChannel => {
+        if (!logChannel.first())
+          return client.sendTime(
+            message.channel,
+            "You took too long to respond."
+          );
+        logChannel = logChannel.first();
+        logChannel = logChannel.content;
+        logChannel = logChannel.replace(/[^0-9]/g, "");
+
+        try{
+          const SetModeration = await GuildConfig.findOneAndUpdate({guildId: message.guild.id },{
+            memberLogChannel: logChannel,
+          },{new: true});
+        }catch (err){
+          console.log(err);
+        }
+
+        client.sendTime(
+          message.channel,
+          `Successfully saved log channel as <#${logChannel}>`
+        );
+      })
+      .catch(collected => {
+        return client.sendTime(message.channel, "You took too long to respond");
+      });
+  }
   },
 };

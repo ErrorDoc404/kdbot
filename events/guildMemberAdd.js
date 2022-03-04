@@ -53,8 +53,11 @@
 
             if(findGuildConfig.memberLogChannel){
               const logChannel = member.guild.channels.cache.get(findGuildConfig.memberLogChannel);
-              logChannel.send(`Missing Access -> Can't grant join member role. Make sure my role is above granting role`);
+              logChannel.send(`Missing Access -> Can't grant <@${member.user.id}> join member role. Make sure my role is above granting role`);
             }
+
+            member.user.send(`You didnt get default join role in ${member.guild.name}. Please talk to server admins for this issue`)
+            .catch((err) => client.error(`${err}`));
           });
         }
    } catch(error){
