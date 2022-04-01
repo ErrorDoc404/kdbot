@@ -1,6 +1,3 @@
-const Module = require("../mongoose/database/schemas/Module");
-const GuildConfig = require("../mongoose/database/schemas/GuildConfig");
-
 module.exports = async (client, guild) => {
 
   try{
