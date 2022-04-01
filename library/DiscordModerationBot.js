@@ -30,11 +30,12 @@ class DiscordModerationBot extends Client {
             cert: fs.readFileSync('./cert/certificate.crt', 'utf8')
         };
         this.server = Express();
-        this.http = http.createServer(function (req, res) {
-            res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-            res.end();
-        });
-        this.https = https.createServer(https_options, this.server);
+        // this.http = http.createServer(function (req, res) {
+        //     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+        //     res.end();
+        // });
+        // this.https = https.createServer(https_options, this.server);
+        this.http = http.createServer(this.server);
         this.server.use('/', require('../express'));
         this.io = new Server(this.https);
         require('../express/socket')(this.io);
@@ -93,9 +94,9 @@ class DiscordModerationBot extends Client {
             this.login(this.config.Token);
             this.log('Server started...');
             if (this.config.ExpressServer) {
-            this.https.listen(this.config.httpsPort, (data) =>
-                this.log(`Web HTTPS Server has been started at ${this.config.httpsPort}`)
-            );
+            // this.https.listen(this.config.httpsPort, (data) =>
+            //     this.log(`Web HTTPS Server has been started at ${this.config.httpsPort}`)
+            // );
             this.http.listen(this.config.httpPort, () =>
                 this.log(`Web HTTP Server has been started at ${this.config.httpPort}`)
             );
@@ -118,7 +119,7 @@ class DiscordModerationBot extends Client {
           .setFooter(
             "If you think this as a bug, please report it in the support server!"
           );
-    
+
         Channel.send({embeds: [embed]});
     }
 
@@ -130,7 +131,7 @@ class DiscordModerationBot extends Client {
           .setFooter(
             "If you think this as a bug, please report it in the support server!"
           );
-    
+
         Channel.send({embeds: [embed]});
     }
 
@@ -138,7 +139,7 @@ class DiscordModerationBot extends Client {
       let embed = new MessageEmbed()
           .setColor("RANDOM")
           .setDescription(Message)
-    
+
         Channel.send({embeds: [embed]});
     }
 
