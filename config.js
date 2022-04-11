@@ -7,7 +7,7 @@ module.exports = {
     buildToken: process.env.BUILD_TOKEN || 'build token',
     Token: process.env.TOKEN || 'bot token',
     ExpressServer: true,
-    httpPort: process.env.HTTP_PORT || '6969',
+    httpPort: process.env.HTTP_PORT || '80',
     httpsPort: process.env.HTTPS_PORT || '443',
     CallbackURL: process.env.CALLBACK_URL || '',
 
