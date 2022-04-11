@@ -25,10 +25,10 @@ class DiscordModerationBot extends Client {
         this.CommandsRan = 0;
 
         //Creating Web portal
-        // var https_options = {
-        //     key: fs.readFileSync('./cert/private.key', 'utf8'),
-        //     cert: fs.readFileSync('./cert/certificate.crt', 'utf8')
-        // };
+        var https_options = {
+            key: fs.readFileSync('./cert/private.key', 'utf8'),
+            cert: fs.readFileSync('./cert/certificate.crt', 'utf8')
+        };
         this.server = Express();
         this.http = http.createServer(function (req, res) {
             res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
