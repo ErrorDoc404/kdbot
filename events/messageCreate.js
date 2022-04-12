@@ -36,7 +36,7 @@ module.exports = async (client, message) => {
           const findRankRole = await RankRole.findOne({guildId: GuildDB.guildId, level: level });
           console.log(findRankRole);
 
-          if(findRankRole.roleId){
+          if(findRankRole){
             if(user_data.rankRole)
               message.member.roles.remove(user_data.rankRole).catch((err) => client.error(`${err}`));
             await Level.findOneAndUpdate({guildId: message.guild.id, userID: message.author.id },{
