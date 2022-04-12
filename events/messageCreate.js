@@ -34,7 +34,6 @@ module.exports = async (client, message) => {
           level++;
 
           const findRankRole = await RankRole.findOne({guildId: GuildDB.guildId, level: level });
-          console.log(findRankRole);
 
           if(findRankRole){
             if(user_data.rankRole)
@@ -79,6 +78,21 @@ module.exports = async (client, message) => {
           level: 1,
           rank: newUserRank
         });
+
+        const findRankRole = await RankRole.findOne({guildId: GuildDB.guildId, level: 1 });
+
+        if(findRankRole){
+          await Level.findOneAndUpdate({guildId: message.guild.id, userID: message.author.id },{
+            rankRole: findRankRole.roleId,
+          },{new: true});
+          message.member.roles.add(findRankRole.roleId).catch((err) => {
+            client.error(`Missing Access: ${err}`);
+
+            message.member.user.send(`You didnt get levelXp earn role in ${message.member.guild.name}. Please talk to server admins for this issue`)
+            .catch((err) => client.error(`${err}`));
+          });
+        }
+
       }
     }
 
