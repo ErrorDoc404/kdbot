@@ -32,7 +32,7 @@ module.exports = {
          name: "level",
          description: "Select level for role",
          value: "level",
-         type: 3,
+         type: 4,
          required: true,
        },
        {
