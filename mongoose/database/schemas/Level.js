@@ -31,6 +31,11 @@ const LevelSchema = new mongoose.Schema({
     require: false,
     default: null,
   },
+  rankRole: {
+    type: mongoose.SchemaTypes.String,
+    require: false,
+    default: null,
+  },
   color: {
     type: mongoose.SchemaTypes.String,
     require: false,

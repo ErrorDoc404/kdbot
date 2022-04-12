@@ -1,4 +1,5 @@
 const GuildConfig = require("../mongoose/database/schemas/GuildConfig");
+const RankRole = require("../mongoose/database/schemas/RankRole");
 const Level = require("../mongoose/database/schemas/Level");
 const client = require("../library/DiscordModerationBot");
 
@@ -31,6 +32,23 @@ module.exports = async (client, message) => {
         if(xp > levelXp){
           xp = xp - levelXp;
           level++;
+
+          const findRankRole = await RankRole.findOne({guildId: GuildDB.guildId, level: level });
+          console.log(findRankRole);
+
+          if(findRankRole.roleId){
+            if(user_data.rankRole)
+              message.member.roles.remove(user_data.rankRole).catch((err) => client.error(`${err}`));
+            await Level.findOneAndUpdate({guildId: message.guild.id, userID: message.author.id },{
+              rankRole: findRankRole.roleId,
+            },{new: true});
+            message.member.roles.add(findRankRole.roleId).catch((err) => {
+              client.error(`Missing Access: ${err}`);
+
+              message.member.user.send(`You didnt get levelXp earn role in ${message.member.guild.name}. Please talk to server admins for this issue`)
+              .catch((err) => client.error(`${err}`));
+            });
+          }
         }
         var rank = parseInt(user_data.rank);
         let pre_user = await Level.findOne({guildId: message.guild.id, rank: (rank-1) });
@@ -120,5 +138,5 @@ module.exports = async (client, message) => {
   } else return;
 
 
-    
+
 };

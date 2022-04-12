@@ -37,7 +37,7 @@ class DiscordModerationBot extends Client {
         // this.https = https.createServer(https_options, this.server);
         this.http = http.createServer(this.server);
         this.server.use('/', require('../express'));
-        this.io = new Server(this.https);
+        this.io = new Server(this.http);
         require('../express/socket')(this.io);
 
         this.LoadEvents();
