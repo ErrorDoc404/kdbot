@@ -33,7 +33,7 @@
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "is-empty": "^1.2.0",
-    "karta-dharta": "^1.4.0",
+    "karta-dharta": "^1.6.5",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^6.2.0",
