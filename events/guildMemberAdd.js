@@ -83,7 +83,8 @@
               if(findWelcomeImage){
                 if(findWelcomeImage.setGif){
                   welcome_channel.send({
-                      files: [ new Discord.MessageAttachment(await welcomeImage.generate(), "welcome.gif") ]
+                    content: welcomeMsg,
+                    files: [ new Discord.MessageAttachment(await welcomeImage.generate(), "welcome.gif") ]
                   });
                 } else{
                   welcome_channel.send({content: welcomeMsg, files: [attachment]});
