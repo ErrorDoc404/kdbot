@@ -15,7 +15,7 @@ module.exports = {
     member: ["ADMINISTRATOR"],
   },
   aliases: [],
-  category: "role",
+  category: "moderation",
   /**
    *
    * @param {import("../structures/DiscordMusicBot")} client
