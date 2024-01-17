@@ -1,4 +1,4 @@
-const random = require("karta-dharta").Random;
+// const random = require("karta-dharta").Random;
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
     let data = await random.getAdvice();
     data = data.embed;
     const embed = new MessageEmbed(data);
-    message.channel.send({embeds: [embed]});
+    message.channel.send({ embeds: [embed] });
   },
   SlashCommand: {
     /**

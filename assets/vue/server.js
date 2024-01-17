@@ -1,33 +1,25 @@
-const index = new Vue({
-  el: '#app-server',
-  data: {
-    user: {
-      _id: null,
-      discordId: null,
-      discordTag: null,
-      avatar: null,
-      guilds: null
+var app = new Vue({
+    el: '#server',
+    data() {
+        return {
+            user: [],
+            guilds: [],
+            session: [],
+            modules: [],
+            name: 'Alash'
+        }
     },
-    guilds: [],
-    cache: []
-  },
-  created () {
-    fetch('/api/auth')
-      .then(res => res.json())
-      .then(json => {
-        this.user = json
-      });
-
-    fetch('/api/user')
-      .then(res => res.json())
-      .then(json => {
-        this.guilds = json.user.guilds
-    });
-
-    fetch('/api/user/guild/cache')
-      .then(res => res.json())
-      .then(json => {
-        this.cache = json
-    });
-  }
-})
+    created() {
+        const currentURL = window.location.href;
+        const urlParts = currentURL.split('/');
+        const lastPart = urlParts[urlParts.length - 1];
+        fetch('/api/server/' + lastPart)
+            .then(response => response.json())
+            .then(data => (this.modules = data))
+    },
+    methods: {
+        createChannel: function () {
+            alert('clicked');
+        }
+    }
+});

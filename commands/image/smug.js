@@ -1,4 +1,4 @@
-const random = require("karta-dharta").Random;
+// const random = require("karta-dharta").Random;
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
@@ -6,8 +6,8 @@ module.exports = {
     description: "Get a random Smug Image",
     usage: "",
     permissions: {
-      channel: ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS"],
-      member: [],
+        channel: ["VIEW_CHANNEL", "SEND_MESSAGES", "EMBED_LINKS"],
+        member: [],
     },
     aliases: [],
     category: "image",
@@ -17,9 +17,9 @@ module.exports = {
         embed.setTitle(`Random smug image`);
         embed.setImage(data);
         // embed.setFooter({text: `if you want to slap someone then tage user`});
-        message.channel.send({embeds: [embed]});
+        message.channel.send({ embeds: [embed] });
     },
-    SlashCommand:{
+    SlashCommand: {
         run: async (client, interaction, args) => {
             let data = await random.getAnimeImgURL('smug');
             const embed = new MessageEmbed();
@@ -27,7 +27,7 @@ module.exports = {
             embed.setImage(data);
             // embed.setFooter({text: `if you want to slap someone then tage user`});
 
-            return interaction.reply({embeds: [embed]}).catch((err) => {client.error(err)});
+            return interaction.reply({ embeds: [embed] }).catch((err) => { client.error(err) });
         }
     }
 };

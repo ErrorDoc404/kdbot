@@ -10,13 +10,14 @@ module.exports = {
     httpPort: process.env.HTTP_PORT || '6969',
     httpsPort: process.env.HTTPS_PORT || '443',
     CallbackURL: process.env.CALLBACK_URL || '',
+    mongooseURL: process.env.MONGOOSE_URL || '',
 
     presence: {
         status: "idle", // online, idle, and dnd(invisible too but it make people think the bot is offline)
         activities: [
             {
-              name: "Server", //Status Text
-              type: "WATCHING", // PLAYING, WATCHING, LISTENING, STREAMING
+                name: "Server", //Status Text
+                type: "WATCHING", // PLAYING, WATCHING, LISTENING, STREAMING
             },
         ],
     },

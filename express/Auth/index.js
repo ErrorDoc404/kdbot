@@ -1,54 +1,68 @@
 require('dotenv').config();
 const passport = require('passport');
-const DiscordStrategy = require('passport-discord').Strategy;
+var DiscordStrategy = require('passport-discord').Strategy
+    , refresh = require('passport-oauth2-refresh');
 const User = require('../../mongoose/database/schemas/User');
 const scopes = ['identify', 'email', 'guilds', 'guilds.join'];
 
-passport.serializeUser((user, done) => {
-  done(null, user.discordId)
+passport.serializeUser((user, cb) => {
+    cb(null, user.discordId)
 });
 
-passport.deserializeUser(async (discordId, done) => {
-  try{
-    const user = await User.findOne({discordId});
-    return user ? done(null, user) : done(null, null);
-  } catch (err) {
-    console.log(err);
-    return done(err, null);
-  }
-});
-
-passport.use(new DiscordStrategy({
-    clientID: process.env.Discord_ClientID ,
-    clientSecret: process.env.Discord_ClientSecret,
-    callbackURL: process.env.CALLBACK_URL,
-    scope: scopes
-}, async function(accessToken, refreshToken, profile, done) {
-      const {id, email, username, discriminator, avatar, guilds} = profile;
-      try{
-        const findUser = await User.findOneAndUpdate({discordId: id }, {
-          discordTag: `${username}#${discriminator}`,
-          avatar,
-          guilds,
-          email,
-        }, {new: true});
-        if(findUser){
-          console.log('user found');
-          return done(null, findUser);
-        } else {
-          const newUser = await User.create({
-            discordId: id,
-            discordTag: `${username}#${discriminator}`,
-            avatar,
-            guilds,
-            email,
-          });
-          return done(null, newUser);
-        }
-      }catch (err){
+passport.deserializeUser(async (discordId, cb) => {
+    try {
+        const user = await User.findOne({ discordId });
+        return user ? cb(null, user) : cb(null, null);
+    } catch (err) {
         console.log(err);
-        return done(err, null);
-      }
-  })
+        return cb(err, null);
+    }
+});
 
+var discordStrat = new DiscordStrategy(
+    {
+        clientID: process.env.Discord_ClientID,
+        clientSecret: process.env.Discord_ClientSecret,
+        callbackURL: process.env.CALLBACK_URL,
+        scope: scopes
+    },
+    async function (accessToken, refreshToken, profile, cb) {
+        profile.refreshToken = refreshToken; // store this for later refreshes
+        const { id, email, username, discriminator, avatar, guilds } = profile;
+        try {
+
+            refresh.requestNewAccessToken('discord', profile.refreshToken, function (err, accessToken, refreshToken) {
+                if (err)
+                    return console.log(err); // boys, we have an error here.
+
+                profile.accessToken = accessToken; // store this new one for our new requests!
+                profile.refreshToken = refreshToken;
+            });
+
+            const findUser = await User.findOneAndUpdate({ discordId: id }, {
+                discordTag: `${username}`,
+                avatar,
+                guilds,
+                email,
+            }, { new: true });
+            if (findUser) {
+                return cb(null, findUser);
+            } else {
+                const newUser = await User.create({
+                    discordId: id,
+                    discordTag: `${username}`,
+                    avatar,
+                    guilds,
+                    email,
+                });
+                return cb(null, newUser);
+            }
+        } catch (err) {
+            console.log(err);
+            return cb(err, null);
+        }
+    }
 );
+
+passport.use(discordStrat);
+refresh.use(discordStrat);
