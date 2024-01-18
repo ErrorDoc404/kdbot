@@ -3,19 +3,30 @@ var app = new Vue({
     data() {
         return {
             user: [],
-            guilds: [],
+            guildConfig: null,
             session: [],
             modules: [],
-            name: 'Alash'
+            admins: [],
+            server: null,
+            name: 'Akash'
         }
     },
     created() {
         const currentURL = window.location.href;
         const urlParts = currentURL.split('/');
         const lastPart = urlParts[urlParts.length - 1];
+        this.server = lastPart;
         fetch('/api/server/' + lastPart)
             .then(response => response.json())
             .then(data => (this.modules = data))
+
+        fetch('/api/server/admins/' + lastPart)
+            .then(response => response.json())
+            .then(data => this.admins = data)
+
+        fetch('/api/server/guilds/' + lastPart)
+            .then(response => response.json())
+            .then(data => (this.guildConfig = data))
     },
     methods: {
         createChannel: function () {

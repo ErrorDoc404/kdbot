@@ -36,6 +36,7 @@ class DiscordModerationBot extends Client {
         this.config = ConfigFetcher;
 
         this.commands = new Collection();
+        this.SlashCommands = new Collection();
         this.CommandRan = 0;
 
         //loading componenets
@@ -123,6 +124,16 @@ class DiscordModerationBot extends Client {
 
     RegisterSlashCommands() {
         require("./SlashCommand")(this);
+    }
+
+    DeRegisterGlobalSlashCommands() {
+        require("./DeGlobalSlashCommand")(this);
+    }
+
+    DeRegisterSlashCommands() {
+        this.guilds.cache.forEach((guild) => {
+            require("./DeGuildSlashCommand")(this, guild.id);
+        });
     }
 }
 
